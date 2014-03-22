@@ -6,11 +6,31 @@ body {
     height: 200px;
     padding: 10px 5px;
 }
-.card-pile div {
+.card-pile > div {
     border: 3px solid #228833;
     background-color: #bada55;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
     border-radius: 15px;
     height: 100%;
+}
+
+.card {
+    background-color: #fefefe;
+    border: 1px solid #222;
+    height: 100%;
+    padding: 0 10px;
+    font-size: 200%;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+.stock > .card {
+    display: none;
+}
+
+.tableau > .card {
+    position: relative;
+    /* have to update the positions of uncovered tableau cards adding -130px to the top */
 }
