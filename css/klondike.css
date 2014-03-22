@@ -1,4 +1,16 @@
+body {
+    background-color: #225522;
+}
+
 .card-pile {
-    background-color: red;
-    height: 120px;
+    height: 200px;
+    padding: 10px 5px;
+}
+.card-pile div {
+    border: 3px solid #228833;
+    background-color: #bada55;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    height: 100%;
 }
