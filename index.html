@@ -6,78 +6,35 @@
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/klondike.css">
     <script src="js/angular.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/directives.js"></script>
+    <script src="js/greetingController.js"></script>
 </head>
 <body>
-    <div ng-app="">
-        <div class="klondike-board container-fluid">
-            <div class="col-xs-2 card-pile">
-                <div class="stock ">
-                    stock cards
-                </div>
-            </div>
-            <div class="col-xs-2 card-pile">
-                <div class="waste">
-                    waste cards
-                </div>
-            </div>
-            <div class="col-xs-2 col-xs-offset-2 card-pile">
-                <div class="foundation">
-                    foundation
-                </div>
-            </div>
-            <div class="col-xs-2 card-pile">
-                <div class="foundation">
-                    foundation
-                </div>
-            </div>
-            <div class="col-xs-2 card-pile">
-                <div class="foundation">
-                    foundation
-                </div>
-            </div>
+    <div ng-app="klondike">
+        <div ng-controller="GreetingController">      
+            <div class="klondike-board container-fluid">
 
-            <div class="col-xs-2 card-pile">
-                <div class="foundation">
-                    foundation
+                <card-pile text="stock cards" type="stock"></card-pile>
+                <card-pile text="waste cards" type="waste"></card-pile>
+                
+                <div class="col-xs-2 col-xs-offset-2 card-pile">
+                    <div class="foundation">
+                        foundation
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-xs-2 card-pile">
-                <div class="tableau">
-                    tableau
-                </div>
-            </div>
+                <card-pile text="foundation" type="foundation"></card-pile>
+                <card-pile text="foundation" type="foundation"></card-pile>
+                <card-pile text="foundation" type="foundation"></card-pile>
 
-            <div class="col-xs-2 card-pile">
-                <div class="tableau">
-                    tableau
-                </div>
-            </div>
-            <div class="col-xs-2 card-pile">
-                <div class="tableau">
-                    tableau
-                </div>
-            </div>
-            <div class="col-xs-2  card-pile">
-                <div class="tableau">
-                    tableau
-                </div>
-            </div>
-            <div class="col-xs-2  card-pile">
-                <div class="tableau">
-                    tableau
-                </div>
-            </div>
-            <div class="col-xs-2  card-pile">
-                <div class="tableau">
-                    tableau
-                </div>
-            </div>
-            <div class="col-xs-2  card-pile">
-                <div class="tableau">
-                    tableau
-                </div>
+                <card-pile text="tableau" type="tableau"></card-pile>
+                <card-pile text="tableau" type="tableau"></card-pile>
+                <card-pile text="tableau" type="tableau"></card-pile>
+                <card-pile text="tableau" type="tableau"></card-pile>
+                <card-pile text="tableau" type="tableau"></card-pile>
+                <card-pile text="tableau" type="tableau"></card-pile>
+                <card-pile text="tableau" type="tableau"></card-pile>
+                
             </div>
         </div>
     </div>
