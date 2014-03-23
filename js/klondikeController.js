@@ -1,4 +1,24 @@
-var Suits = ['hearts', 'diamonds', 'spades', 'clubs'];
+var Suits = [
+    {
+        name: 'hearts',
+        symbol: '♥',
+        color: 'red'
+    }, 
+    {   name: 'diamonds',
+        symbol: '♦',
+        color: 'red'
+    },
+    {   name: 'spades',
+        symbol: '♠',
+        color: 'black'
+    },
+    {   name: 'clubs',
+        symbol: '♣',
+        color: 'black'
+    }
+]
+
+
 
 function Card(suit, number) {
     this.suit = suit;

@@ -10,7 +10,8 @@ angular.module('klondike.directive', []).directive(
 	  	templateUrl: 'templates/cardPile.html',
 	    scope: {
 		    'text': '@',
-		    'type': '@'
+		    'type': '@',
+		    'card': '='
 		},
 	  	restrict: "E"
 	};
