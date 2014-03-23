@@ -26,11 +26,17 @@ body {
     border-radius: 15px;
 }
 
+.card.faceDown  {
+    background-color: #666;
+}
+.card.faceDown * {
+    display: none;
+}
+
 .stock > .card {
     display: none;
 }
 
 .tableau > .card {
     position: relative;
-    /* have to update the positions of uncovered tableau cards adding -130px to the top */
 }

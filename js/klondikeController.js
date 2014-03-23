@@ -23,6 +23,7 @@ var Suits = [
 function Card(suit, number) {
     this.suit = suit;
     this.number = number;
+    this.faceUp = false;
 }
 
 function createDeck() {
@@ -58,7 +59,9 @@ function Klondike() {
     this.init = function(){
         var deck = createDeck();
         angular.forEach([1, 2, 3, 4, 5, 6, 7], function(numCards){
-            klondike.tableaus.push(deck.splice(0, numCards));
+            var tableau = deck.splice(0, numCards);
+            tableau[tableau.length - 1].faceUp = true;
+            klondike.tableaus.push(tableau);
         });
         klondike.stock = deck;
     };

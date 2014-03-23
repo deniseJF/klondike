@@ -1,7 +1,8 @@
 
 <div class="col-xs-2 card-pile">
 	<div class="{{type}}">
-        <div class="card" style="color:{{card.suit.color}}">
+        <div class="card {{card.faceUp ? 'faceUp' : 'faceDown'}}"
+            style="color:{{card.suit.color}}; top: {{$index * -130}}px;" ng-repeat="card in cards">
             <span class="number">{{card.number}}</span>
             <span class="suit">{{card.suit.symbol}}</span>
         </div>

@@ -11,7 +11,7 @@ angular.module('klondike.directive', []).directive(
 	    scope: {
 		    'text': '@',
 		    'type': '@',
-		    'card': '='
+		    'cards': '='
 		},
 	  	restrict: "E"
 	};
