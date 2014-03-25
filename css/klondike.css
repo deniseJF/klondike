@@ -40,3 +40,7 @@ body {
 .tableau > .card {
     position: relative;
 }
+
+.klondike-board {
+    max-width: 1000px;
+}
