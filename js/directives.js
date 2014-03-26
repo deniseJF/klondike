@@ -9,11 +9,20 @@ angular.module('klondike.directive', []).directive(
 	return {
 	  	templateUrl: 'templates/cardPile.html',
 	    scope: {
-		    'text': '@',
 		    'type': '@',
 		    'cards': '='
 		},
 	  	restrict: "E"
+	};
+ }).directive(
+	'card', function() {
+	return {
+	    templateUrl: 'templates/card.html',
+	    scope: {
+	    	'card': '=',
+		    'position': '@'
+		},
+	    restrict: "E"
 	};
  }).directive('draggable', function($document) {
     return function(scope, element, attr) {
@@ -22,7 +31,11 @@ angular.module('klondike.directive', []).directive(
        position: 'relative',
        cursor: 'pointer'
       });
-      element.on('mousedown', function(event) {
+
+      console.log("position",element.style);
+      element.on('mousedown', mousedown);
+
+      function mousedown(event){
         // Prevent default dragging of selected content
         y = parseInt(angular.element(element[0]).css('top'));
         event.preventDefault();
@@ -30,7 +43,7 @@ angular.module('klondike.directive', []).directive(
         startY = event.screenY - y;
         $document.on('mousemove', mousemove);
         $document.on('mouseup', mouseup);
-      });
+      }
 
       function mousemove(event) {
         y = event.screenY - startY;
