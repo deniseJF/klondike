@@ -25,6 +25,7 @@ angular.module('klondike.directive', []).directive(
         restrict: "E"
     };
  }).directive('draggable', function($document) {
+
     return function(scope, element, attr) {
       var startX = 0, startY = 0, x = 0, y = 0;
       element.css({
@@ -32,12 +33,11 @@ angular.module('klondike.directive', []).directive(
        cursor: 'pointer'
       });
 
-      console.log("position",element.style);
       element.on('mousedown', mousedown);
 
       function mousedown(event){
         // Prevent default dragging of selected content
-        y = parseInt(angular.element(element[0]).css('top'));
+        y = parseInt(element.css('top'));
         event.preventDefault();
         startX = event.screenX - x;
         startY = event.screenY - y;
@@ -52,6 +52,26 @@ angular.module('klondike.directive', []).directive(
           top: y + 'px' ,
           left:  x + 'px'
         });
+
+        var intersectingElement = getIntersectingDroppableElement(element[0]);
+        if(intersectingElement){
+          // TODO: alterar para indicar visualmente este elemento como dropavel
+          // de acordo com as regras do jogo
+          angular.element(intersectingElement).css("border","1px solid red");
+        }
+      }
+
+      function getIntersectingDroppableElement(element){
+        // TODO: alterar para retornar uma lista de elementos intersectando
+        var draggableRectangle = new Rectangle(element);
+        var droppableElements = document.getElementsByClassName("droppable");
+        for(var i = 0; i < droppableElements.length; i++) {
+          var droppable = droppableElements[i];
+          var droppableRectangle = new Rectangle(droppable);
+            if(draggableRectangle.intersectsWith(droppableRectangle)){
+              return droppable;
+            }
+        }
       }
 
       function mouseup() {
@@ -59,4 +79,8 @@ angular.module('klondike.directive', []).directive(
         $document.unbind('mouseup', mouseup);
       }
     };
+  }).directive('droppable', function($document) {
+      return function(scope, element, attr) {
+
+      }
   });

@@ -49,6 +49,25 @@ function createDeck() {
     }
 }
 
+
+var Rectangle = function(element){
+    var boundings = element.getBoundingClientRect();
+
+    this.left = boundings.left;
+    this.right = boundings.right;
+    this.top = boundings.top;
+    this.bottom = boundings.bottom;
+
+    this.intersectsWith = function(other){
+        return !(other.left > this.right || 
+           other.right < this.left || 
+           other.top > this.bottom ||
+           other.bottom < this.top);
+    }
+}
+
+
+
 function Klondike() {
     this.stock = [];
     this.waste = [];
