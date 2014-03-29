@@ -140,7 +140,10 @@ function KlondikeController($scope) {
             if (target == tableauContainingCard) {
                 return false;
             }
-            return (target && card.isSequenceTo(target[target.length - 1]));
+            if (target.length == 0) {
+                return card.number == "K";
+            }
+            return card.isSequenceTo(target[target.length - 1]);
         }
     }
 
@@ -153,7 +156,7 @@ function KlondikeController($scope) {
     }
 
     function highlightCandidate(candidateForDropping) {
-        if (candidateForDropping) {
+        if (candidateForDropping.length) {
             candidateForDropping[candidateForDropping.length - 1].highlight = true;
         }
         $scope.$apply();
