@@ -25,9 +25,13 @@ function Card(suit, number) {
     this.number = number;
     this.faceUp = false;
     this.highlight = false;
-    this.isSequenceTo = function(other) {
+    this.isTableauSequenceTo = function(other) {
         return other.faceUp && this.suit.color != other.suit.color && this.number != "K" &&
             (CARD_NUMBERS.indexOf(this.number) + 1) == CARD_NUMBERS.indexOf(other.number);
+    }
+    this.isFoundationSequenceTo = function(other) {
+        return this.suit == other.suit && this.number != "A" &&
+            CARD_NUMBERS.indexOf(this.number) == (CARD_NUMBERS.indexOf(other.number) + 1);
     }
 }
 
@@ -134,20 +138,32 @@ function KlondikeController($scope) {
     function findCandidateForDropping(card, possibleTargets) {
         var tableauContainingCard = getPileContainingCard(card);
         var cardsForPossibleTargets = possibleTargets.map(function(elem) {
-            return angular.element(elem).scope().cards;
-        }).filter(isFeasibleTarget);
+            return angular.element(elem).scope();
+        }).filter(isFeasibleTarget).map(function(elem){
+            return elem.cards;
+        });
         if (cardsForPossibleTargets) {
             return cardsForPossibleTargets[0];
         }
 
         function isFeasibleTarget(target) {
-            if (target == tableauContainingCard) {
+            if (target.cards == tableauContainingCard) {
                 return false;
             }
-            if (target.length == 0) {
-                return card.number == "K";
+
+            if(target.type == 'tableau'){
+                if (target.cards.length == 0) {
+                    return card.number == "K";
+                }
+                return card.isTableauSequenceTo(target.cards[target.cards.length - 1]);
             }
-            return card.isSequenceTo(target[target.length - 1]);
+
+            if(target.type == 'foundation'){
+                if (target.cards.length == 0) {
+                    return card.number == "A";
+                }
+                return card.isFoundationSequenceTo(target.cards[target.cards.length - 1]);
+            }
         }
     }
 
