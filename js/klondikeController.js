@@ -156,7 +156,7 @@ function KlondikeController($scope) {
     }
 
     function highlightCandidate(candidateForDropping) {
-        if (candidateForDropping.length) {
+        if (candidateForDropping && candidateForDropping.length) {
             candidateForDropping[candidateForDropping.length - 1].highlight = true;
         }
         $scope.$apply();
