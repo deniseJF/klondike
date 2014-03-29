@@ -37,7 +37,7 @@ body {
     display: none;
 }
 
-.stock .card {
+.stock .card,.waste .card,.foundation .card{
     position: relative;
     top: 0;
 }

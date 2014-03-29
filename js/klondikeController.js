@@ -188,5 +188,18 @@ function KlondikeController($scope) {
         $scope.$apply();
     });
 
+    $scope.dealFromStock = function(){
+        if(!$scope.game.stock.length){
+            $scope.game.stock = $scope.game.waste.splice(0).reverse().map(function(elem){
+                elem.faceUp = false;
+                return elem;
+            });        
+        }else{
+            var card = $scope.game.stock.pop();
+            card.faceUp = true;
+            $scope.game.waste.push(card);
+        }
+    };
+
     console.log('game', $scope.game);
 }

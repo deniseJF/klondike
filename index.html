@@ -14,14 +14,14 @@
         <div ng-controller="KlondikeController">      
             <div class="klondike-board container-fluid">
 
-                <card-pile cards="game.stock" type="stock"></card-pile>
-                <card-pile type="waste"></card-pile>
+                <card-pile cards="game.stock" type="stock" ng-click="dealFromStock()"></card-pile>
+                <card-pile type="waste" cards="game.waste"></card-pile>
                 <div class="col-xs-2"></div>
 
-                <card-pile type="foundation"></card-pile>
-                <card-pile type="foundation"></card-pile>
-                <card-pile type="foundation"></card-pile>
-                <card-pile type="foundation"></card-pile>
+                <card-pile type="foundation" cards="game.foundation[0]"></card-pile>
+                <card-pile type="foundation" cards="game.foundation[1]"></card-pile>
+                <card-pile type="foundation" cards="game.foundation[2]"></card-pile>
+                <card-pile type="foundation" cards="game.foundation[3]"></card-pile>
 
                 <card-pile type="tableau" cards="game.tableaus[0]"></card-pile>
                 <card-pile type="tableau" cards="game.tableaus[1]"></card-pile>

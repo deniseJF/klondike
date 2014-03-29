@@ -1,6 +1,6 @@
 
 <div class="col-xs-2 card-pile">
     <div class="{{type}} droppable">
-        <card card="card" position="{{type=='tableau'?$index*-130:$index*-174}}" ng-repeat="card in cards" />
+        <card card="card" position="{{(type=='tableau')?($index*-130):($index*-174)}}" ng-repeat="card in cards" />
     </div>
 </div>
