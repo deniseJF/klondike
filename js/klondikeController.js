@@ -118,7 +118,7 @@ function KlondikeController($scope) {
     $scope.game = new Klondike();
     $scope.game.init();
 
-    function getTableauContainingCard(card) {
+    function getPileContainingCard(card) {
         if ($scope.game.waste.indexOf(card) >= 0) {
             return $scope.game.waste;
         }
@@ -132,7 +132,7 @@ function KlondikeController($scope) {
     }
 
     function findCandidateForDropping(card, possibleTargets) {
-        var tableauContainingCard = getTableauContainingCard(card);
+        var tableauContainingCard = getPileContainingCard(card);
         var cardsForPossibleTargets = possibleTargets.map(function(elem) {
             return angular.element(elem).scope().cards;
         }).filter(isFeasibleTarget);
@@ -177,7 +177,7 @@ function KlondikeController($scope) {
         var card = element.scope().card;
         var candidateForDropping = findCandidateForDropping(card, possibleTargets);
         if (candidateForDropping) {
-            var tableauContainingCard = getTableauContainingCard(card);
+            var tableauContainingCard = getPileContainingCard(card);
             var index = tableauContainingCard.indexOf(card);
             var movingCards = tableauContainingCard.splice(index)
             angular.forEach(movingCards, function(movingCard) {
