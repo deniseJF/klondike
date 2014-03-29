@@ -119,7 +119,7 @@ function KlondikeController($scope) {
     $scope.game.init();
 
     function getTableauContainingCard(card) {
-        for(var i =0; $scope.game.tableaus; i++) {
+        for(var i = 0; i < $scope.game.tableaus.length; i++) {
             var tableau = $scope.game.tableaus[i];
             if (tableau.indexOf(card) >= 0) {
                 return tableau;
