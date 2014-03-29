@@ -18,18 +18,23 @@ var Suits = [
     }
 ]
 
-
+var CARD_NUMBERS = ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"];
 
 function Card(suit, number) {
     this.suit = suit;
     this.number = number;
     this.faceUp = false;
+    this.highlight = false;
+    this.isSequenceTo = function(other) {
+        return other.faceUp && this.suit.color != other.suit.color && this.number != "K" &&
+            (CARD_NUMBERS.indexOf(this.number) + 1) == CARD_NUMBERS.indexOf(other.number);
+    }
 }
 
 function createDeck() {
     var cards = [];
     angular.forEach(Suits, function(suit) {
-        angular.forEach(["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"], function(number){
+        angular.forEach(CARD_NUMBERS, function(number){
             cards.push(new Card(suit, number));
         })
     });
@@ -124,27 +129,37 @@ function KlondikeController($scope) {
 
     function findCandidateForDropping(card, possibleTargets) {
         var tableauContainingCard = getTableauContainingCard(card);
-        function isFeasibleTarget(target) {
-            if (target == tableauContainingCard) {
-                return false;
-            }
-            // TODO: corrigir essa logica e mover para Card
-            return (target && target[target.length - 1].suit != card.suit);
-        }
         var cardsForPossibleTargets = possibleTargets.map(function(elem) {
             return angular.element(elem).scope().cards;
         }).filter(isFeasibleTarget);
         if (cardsForPossibleTargets) {
             return cardsForPossibleTargets[0];
         }
+
+        function isFeasibleTarget(target) {
+            if (target == tableauContainingCard) {
+                return false;
+            }
+            return (target && card.isSequenceTo(target[target.length - 1]));
+        }
+    }
+
+    function highlightCandidate(candidateForDropping) {
+        angular.forEach($scope.game.tableaus, function(tableau){
+            angular.forEach(tableau, function(it) {
+                it.highlight = false;
+            });
+        });
+        if (candidateForDropping) {
+            candidateForDropping[candidateForDropping.length - 1].highlight = true;
+        }
+        $scope.$apply();
     }
 
     $scope.$on('onElementDrag', function(event, element, possibleTargets) {
         var card = element.scope().card;
-        console.log('dragged', card);
-        var candidateForDroppping = findCandidateForDropping(card, possibleTargets);
-        console.log('candidateForDroppping', candidateForDroppping);
-        // TODO: colore a ultima carta
+        var candidateForDropping = findCandidateForDropping(card, possibleTargets);
+        highlightCandidate(candidateForDropping);
     });
 
     $scope.play = function(card) {

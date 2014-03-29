@@ -26,6 +26,10 @@ body {
     border-radius: 15px;
 }
 
+.card.highlight {
+    background-color: yellow;
+}
+
 .card.faceDown  {
     background-color: #666;
 }
