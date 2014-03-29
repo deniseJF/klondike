@@ -1,5 +1,5 @@
 <div class="card {{card.faceUp ? 'faceUp' : 'faceDown'}} {{card.highlight ? 'highlight' : ''}}"
-    style="color:{{card.suit.color}}; top: {{position}}px;" draggable>
+    style="color:{{card.suit.color}}; top: {{position}}px;" draggable enable-drag="{{card.faceUp}}">
     <span class="number">{{card.number+" "}}</span>
     <span class="suit">{{card.suit.symbol}}</span>
 </div>

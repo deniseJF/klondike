@@ -28,7 +28,7 @@ angular.module('klondike.directive', []).directive(
      return {
          restrict: 'A',
          scope: {
-             'ondrag': '&'
+             'enableDrag': '@'
          },
          link: function(scope, element, attr) {
              var startX = 0, startY = 0, x = 0, y = 0;
@@ -50,6 +50,9 @@ angular.module('klondike.directive', []).directive(
              }
 
              function mousemove(event) {
+                if(scope.enableDrag=='false')
+                  return;
+
                  y = event.screenY - startY;
                  x = event.screenX - startX;
                  element.css({
