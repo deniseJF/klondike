@@ -90,5 +90,22 @@ function KlondikeController($scope) {
     $scope.game = new Klondike();
     $scope.game.init();
 
+    $scope.$on('onElementDrag', function(event, card, possibleTargets) {
+        card = card.scope().card;
+        possibleTargets = possibleTargets.map(function(elem) {
+            return angular.element(elem).scope().cards;
+        });
+        console.log('card dragged', card);
+        console.log('possible targets:', possibleTargets);
+    });
+
+    $scope.play = function(card) {
+        // var possibleTarget = findPossibleTarget(card);
+        // if (card.isNext(target)) {
+        //     target.highlight = true;
+        // }
+        console.log('playing ... ');
+    }
+
     console.log('game', $scope.game);
 }
