@@ -37,8 +37,9 @@ body {
     display: none;
 }
 
-.stock > .card {
-    display: none;
+.stock .card {
+    position: relative;
+    top: 0;
 }
 
 .tableau .card {
