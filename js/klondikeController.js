@@ -179,6 +179,9 @@ function KlondikeController($scope) {
             angular.forEach(movingCards, function(movingCard) {
                 candidateForDropping.push(movingCard)
             });
+            if(tableauContainingCard.length){
+                tableauContainingCard[tableauContainingCard.length-1].faceUp = true;
+            }
         } else {
             // TODO: voltar carta para origem
         }
