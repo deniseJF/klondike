@@ -58,11 +58,34 @@ var Rectangle = function(element){
     this.top = boundings.top;
     this.bottom = boundings.bottom;
 
-    this.intersectsWith = function(other){
+    this.intersectsWith = function(other) {
         return !(other.left > this.right || 
            other.right < this.left || 
            other.top > this.bottom ||
            other.bottom < this.top);
+    }
+
+    this.intersectingArea = function(other){
+        function max(x, y) {
+            if (x > y) {
+                return x;
+            }
+            return y;
+        }
+        function min(x, y) {
+            if (x < y) {
+                return x;
+            }
+            return y;
+        }
+        var left = max(this.left, other.left);
+        var right = min(this.right, other.right);
+        var bottom = max(this.bottom, other.bottom);
+        var top = min(this.top, other.top);
+        if (left < right && bottom < top) {
+            return (bottom - top) * (right - left);
+        }
+        return 0;
     }
 }
 
@@ -90,13 +113,38 @@ function KlondikeController($scope) {
     $scope.game = new Klondike();
     $scope.game.init();
 
-    $scope.$on('onElementDrag', function(event, card, possibleTargets) {
-        card = card.scope().card;
-        possibleTargets = possibleTargets.map(function(elem) {
+    function getTableauContainingCard(card) {
+        for(var i =0; $scope.game.tableaus; i++) {
+            var tableau = $scope.game.tableaus[i];
+            if (tableau.indexOf(card) >= 0) {
+                return tableau;
+            }
+        }
+    }
+
+    function findCandidateForDropping(card, possibleTargets) {
+        var tableauContainingCard = getTableauContainingCard(card);
+        function isFeasibleTarget(target) {
+            if (target == tableauContainingCard) {
+                return false;
+            }
+            // TODO: corrigir essa logica e mover para Card
+            return (target && target[target.length - 1].suit != card.suit);
+        }
+        var cardsForPossibleTargets = possibleTargets.map(function(elem) {
             return angular.element(elem).scope().cards;
-        });
-        console.log('card dragged', card);
-        console.log('possible targets:', possibleTargets);
+        }).filter(isFeasibleTarget);
+        if (cardsForPossibleTargets) {
+            return cardsForPossibleTargets[0];
+        }
+    }
+
+    $scope.$on('onElementDrag', function(event, element, possibleTargets) {
+        var card = element.scope().card;
+        console.log('dragged', card);
+        var candidateForDroppping = findCandidateForDropping(card, possibleTargets);
+        console.log('candidateForDroppping', candidateForDroppping);
+        // TODO: colore a ultima carta
     });
 
     $scope.play = function(card) {

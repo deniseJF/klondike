@@ -64,6 +64,7 @@ angular.module('klondike.directive', []).directive(
              }
 
              function getIntersectingDroppableElements(element){
+                 // TODO: tratar interseccao com elementos (cards) dentro do elemento droppable
                  var draggableRectangle = new Rectangle(element);
                  var droppableElements = document.getElementsByClassName("droppable");
                  var possibleTargets = [];
