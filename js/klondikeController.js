@@ -144,12 +144,15 @@ function KlondikeController($scope) {
         }
     }
 
-    function highlightCandidate(candidateForDropping) {
+    function dehighlightAllCards() {
         angular.forEach($scope.game.tableaus, function(tableau){
             angular.forEach(tableau, function(it) {
                 it.highlight = false;
             });
         });
+    }
+
+    function highlightCandidate(candidateForDropping) {
         if (candidateForDropping) {
             candidateForDropping[candidateForDropping.length - 1].highlight = true;
         }
@@ -162,13 +165,22 @@ function KlondikeController($scope) {
         highlightCandidate(candidateForDropping);
     });
 
-    $scope.play = function(card) {
-        // var possibleTarget = findPossibleTarget(card);
-        // if (card.isNext(target)) {
-        //     target.highlight = true;
-        // }
-        console.log('playing ... ');
-    }
+    $scope.$on('onElementDrop', function(event, element, possibleTargets) {
+        dehighlightAllCards();
+        var card = element.scope().card;
+        var candidateForDropping = findCandidateForDropping(card, possibleTargets);
+        if (candidateForDropping) {
+            var tableauContainingCard = getTableauContainingCard(card);
+            var index = tableauContainingCard.indexOf(card);
+            var movingCards = tableauContainingCard.splice(index)
+            angular.forEach(movingCards, function(movingCard) {
+                candidateForDropping.push(movingCard)
+            });
+        } else {
+            // TODO: voltar carta para origem
+        }
+        $scope.$apply();
+    });
 
     console.log('game', $scope.game);
 }

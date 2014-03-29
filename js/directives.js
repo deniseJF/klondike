@@ -58,9 +58,7 @@ angular.module('klondike.directive', []).directive(
                  });
 
                  var possibleTargets = getIntersectingDroppableElements(element[0]);
-                 if (possibleTargets) {
-                     scope.$emit('onElementDrag', element, possibleTargets);
-                 }
+                 scope.$emit('onElementDrag', element, possibleTargets);
              }
 
              function getIntersectingDroppableElements(element){
@@ -81,6 +79,8 @@ angular.module('klondike.directive', []).directive(
              function mouseup() {
                  $document.unbind('mousemove', mousemove);
                  $document.unbind('mouseup', mouseup);
+                 var possibleTargets = getIntersectingDroppableElements(element[0]);
+                 scope.$emit('onElementDrop', element, possibleTargets);
              }
          }
      };
