@@ -20,7 +20,8 @@ angular.module('klondike.directive', []).directive(
         templateUrl: 'templates/card.html',
         scope: {
             'card': '=',
-            'position': '@'
+            'position': '@',
+            'zoomIndex': '@'
         },
         restrict: "E"
     };
@@ -31,7 +32,7 @@ angular.module('klondike.directive', []).directive(
              'enableDrag': '@'
          },
          link: function(scope, element, attr) {
-             var startX = 0, startY = 0, x = 0, y = 0;
+             var startX = 0, startY = 0, x = 0, y = 0, initialTop = 0, initialLeft = 0;
              element.css({
                  position: 'relative',
                  cursor: 'pointer'
@@ -40,9 +41,10 @@ angular.module('klondike.directive', []).directive(
              element.on('mousedown', mousedown);
 
              function mousedown(event){
-                 // Prevent default dragging of selected content
-                 y = parseInt(element.css('top'));
                  event.preventDefault();
+                 initialTop = element.css('top');
+                 initialLeft = element.css('left');
+                 y = parseInt(element.css('top'));
                  startX = event.screenX - x;
                  startY = event.screenY - y;
                  $document.on('mousemove', mousemove);
@@ -57,7 +59,8 @@ angular.module('klondike.directive', []).directive(
                  x = event.screenX - startX;
                  element.css({
                      top: y + 'px' ,
-                     left:  x + 'px'
+                     left:  x + 'px',
+                     'z-index': 1000
                  });
 
                  var possibleTargets = getIntersectingDroppableElements(element[0]);
@@ -83,12 +86,9 @@ angular.module('klondike.directive', []).directive(
                  $document.unbind('mousemove', mousemove);
                  $document.unbind('mouseup', mouseup);
                  var possibleTargets = getIntersectingDroppableElements(element[0]);
-                 scope.$emit('onElementDrop', element, possibleTargets);
+                 x = 0, y = 0;
+                 scope.$emit('onElementDrop', element, possibleTargets, initialTop, initialLeft);
              }
          }
      };
-  }).directive('droppable', function($document) {
-      return function(scope, element, attr) {
-
-      }
   });

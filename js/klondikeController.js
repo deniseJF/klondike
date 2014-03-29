@@ -25,6 +25,8 @@ function Card(suit, number) {
     this.number = number;
     this.faceUp = false;
     this.highlight = false;
+    this.zindex = -1;
+
     this.isTableauSequenceTo = function(other) {
         return other.faceUp && this.suit.color != other.suit.color && this.number != "K" &&
             (CARD_NUMBERS.indexOf(this.number) + 1) == CARD_NUMBERS.indexOf(other.number);
@@ -188,7 +190,7 @@ function KlondikeController($scope) {
         highlightCandidate(candidateForDropping);
     });
 
-    $scope.$on('onElementDrop', function(event, element, possibleTargets) {
+    $scope.$on('onElementDrop', function(event, element, possibleTargets, initialTop, initialLeft) {
         dehighlightAllCards();
         var card = element.scope().card;
         var candidateForDropping = findCandidateForDropping(card, possibleTargets);
@@ -203,7 +205,10 @@ function KlondikeController($scope) {
                 tableauContainingCard[tableauContainingCard.length-1].faceUp = true;
             }
         } else {
-            // TODO: voltar carta para origem
+            angular.element(element).css({
+                top: initialTop,
+                left: initialLeft
+            });
         }
         $scope.$apply();
     });
