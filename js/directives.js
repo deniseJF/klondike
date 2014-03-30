@@ -33,6 +33,7 @@ angular.module('klondike.directive', []).directive(
          },
          link: function(scope, element, attr) {
              var startX = 0, startY = 0, x = 0, y = 0, initialTop = 0, initialLeft = 0;
+             var originalZoomIndex = 0;
              element.css({
                  position: 'relative',
                  cursor: 'pointer'
@@ -47,6 +48,7 @@ angular.module('klondike.directive', []).directive(
                  y = parseInt(element.css('top'));
                  startX = event.screenX - x;
                  startY = event.screenY - y;
+                 originalZoomIndex = element.css('z-index');
                  $document.on('mousemove', mousemove);
                  $document.on('mouseup', mouseup);
              }
@@ -86,6 +88,7 @@ angular.module('klondike.directive', []).directive(
                  $document.unbind('mousemove', mousemove);
                  $document.unbind('mouseup', mouseup);
                  var possibleTargets = getIntersectingDroppableElements(element[0]);
+                 element.css('z-index', originalZoomIndex);
                  x = 0, y = 0;
                  scope.$emit('onElementDrop', element, possibleTargets, initialTop, initialLeft);
              }
