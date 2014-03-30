@@ -1,5 +1,5 @@
   
-angular.module('klondike', ['klondike.directive']).
+angular.module('klondike', ['klondike.directive', 'ngTouch']).
 run(function() {
 });
 
@@ -30,7 +30,7 @@ angular.module('klondike.directive', []).directive(
             });
         }
     };
- }).directive('draggable', function($document) {
+ }).directive('draggable', ['$document', '$swipe', function($document, $swipe) {
      return {
          restrict: 'A',
          scope: {
@@ -43,27 +43,27 @@ angular.module('klondike.directive', []).directive(
                  position: 'relative',
                  cursor: 'pointer'
              });
-
-             element.on('mousedown', mousedown);
+             $swipe.bind(element, {
+                 start: mousedown,
+                 move: mousemove,
+                 end: mouseup
+             })
 
              function mousedown(event){
-                 event.preventDefault();
                  initialTop = element.css('top');
                  initialLeft = element.css('left');
                  y = parseInt(element.css('top'));
-                 startX = event.screenX - x;
-                 startY = event.screenY - y;
+                 startX = event.x - x;
+                 startY = event.y - y;
                  originalZoomIndex = element.css('z-index');
-                 $document.on('mousemove', mousemove);
-                 $document.on('mouseup', mouseup);
              }
 
              function mousemove(event) {
                 if(scope.enableDrag=='false')
                   return;
 
-                 y = event.screenY - startY;
-                 x = event.screenX - startX;
+                 y = event.y - startY;
+                 x = event.x - startX;
                  element.css({
                      top: y + 'px' ,
                      left:  x + 'px',
@@ -75,7 +75,6 @@ angular.module('klondike.directive', []).directive(
              }
 
              function getIntersectingDroppableElements(element){
-                 // TODO: tratar interseccao com elementos (cards) dentro do elemento droppable
                  var draggableRectangle = new Rectangle(element);
                  var droppableElements = document.getElementsByClassName("droppable");
                  var possibleTargets = [];
@@ -90,8 +89,6 @@ angular.module('klondike.directive', []).directive(
              }
 
              function mouseup() {
-                 $document.unbind('mousemove', mousemove);
-                 $document.unbind('mouseup', mouseup);
                  var possibleTargets = getIntersectingDroppableElements(element[0]);
                  element.css('z-index', originalZoomIndex);
                  x = 0, y = 0;
@@ -99,4 +96,4 @@ angular.module('klondike.directive', []).directive(
              }
          }
      };
-  });
+  }]);
