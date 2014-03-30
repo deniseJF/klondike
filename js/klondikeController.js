@@ -125,15 +125,12 @@ function KlondikeController($scope) {
     $scope.game.init();
 
     function getPileContainingCard(card) {
-        if ($scope.game.waste.indexOf(card) >= 0) {
-            return $scope.game.waste;
-        }
-
-        for(var i = 0; i < $scope.game.tableaus.length; i++) {
-            var tableau = $scope.game.tableaus[i];
-            if (tableau.indexOf(card) >= 0) {
-                return tableau;
-            }
+        var piles = [$scope.game.waste].concat($scope.game.foundations).concat($scope.game.tableaus);
+        var pileContainingCard = piles.filter(function(pile){
+            return pile.indexOf(card) >= 0;
+        });
+        if (pileContainingCard && pileContainingCard.length){
+            return pileContainingCard[0];
         }
     }
 
@@ -246,6 +243,4 @@ function KlondikeController($scope) {
             $scope.game.waste.push(card);
         }
     };
-
-    console.log('game', $scope.game);
 }
