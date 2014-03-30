@@ -18,7 +18,7 @@ body {
 .card {
     height: 174px;
     background-color: #fefefe;
-    border: 1px solid #222;
+    border: 2px solid #222;
     padding: 0 10px;
     font-size: 200%;
     -webkit-border-radius: 15px;
@@ -27,11 +27,12 @@ body {
 }
 
 .card.highlight {
-    background-color: yellow;
+    background-color: #ffff99;
 }
 
 .card.faceDown  {
     background-color: #aaa;
+    background: #aaa url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAUElEQVQYV2NkYGAwBuKzQAwDID4IoIgxIikAMZE1oRiArBDdZBSNMIXoJiFbDZYDKcSmCOYimDuNSVKIzRNYrUYOFuQgweoZbIoxgoeoAAcAEckW11HVTfcAAAAASUVORK5CYII=) repeat;
 }
 .card.faceDown * {
     display: none;
