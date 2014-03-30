@@ -31,7 +31,7 @@ body {
 }
 
 .card.faceDown  {
-    background-color: #666;
+    background-color: #aaa;
 }
 .card.faceDown * {
     display: none;
