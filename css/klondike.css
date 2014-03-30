@@ -16,9 +16,9 @@ body {
 }
 
 .card {
+    height: 174px;
     background-color: #fefefe;
     border: 1px solid #222;
-    height: 100%;
     padding: 0 10px;
     font-size: 200%;
     -webkit-border-radius: 15px;
