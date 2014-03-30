@@ -170,8 +170,9 @@ function KlondikeController($scope) {
     }
 
     function dehighlightAllCards() {
-        angular.forEach($scope.game.tableaus, function(tableau){
-            angular.forEach(tableau, function(it) {
+        var pile = $scope.game.tableaus.concat($scope.game.foundations);
+        angular.forEach(pile, function(cards){
+            angular.forEach(cards, function(it) {
                 it.highlight = false;
             });
         });
