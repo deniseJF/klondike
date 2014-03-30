@@ -137,8 +137,22 @@ function KlondikeController($scope) {
         }
     }
 
+    function isFeasibleFoundation(card, pile) {
+        if (pile.length == 0) {
+            return card.number == "A";
+        }
+        return card.isFoundationSequenceTo(pile[pile.length - 1]);
+    }
+
+    function isFeasibleTableau(card, pile) {
+        if (pile.length == 0) {
+            return card.number == "K";
+        }
+        return card.isTableauSequenceTo(pile[pile.length - 1]);
+    }
+
     function findCandidateForDropping(card, possibleTargets) {
-        var tableauContainingCard = getPileContainingCard(card);
+        var pileContainingCard = getPileContainingCard(card);
         var cardsForPossibleTargets = possibleTargets.map(function(elem) {
             return angular.element(elem).scope();
         }).filter(isFeasibleTarget).map(function(elem){
@@ -149,22 +163,14 @@ function KlondikeController($scope) {
         }
 
         function isFeasibleTarget(target) {
-            if (target.cards == tableauContainingCard) {
+            if (target.cards == pileContainingCard) {
                 return false;
             }
-
             if(target.type == 'tableau'){
-                if (target.cards.length == 0) {
-                    return card.number == "K";
-                }
-                return card.isTableauSequenceTo(target.cards[target.cards.length - 1]);
+                return isFeasibleTableau(card, target.cards);
             }
-
             if(target.type == 'foundation'){
-                if (target.cards.length == 0) {
-                    return card.number == "A";
-                }
-                return card.isFoundationSequenceTo(target.cards[target.cards.length - 1]);
+                return isFeasibleFoundation(card, target.cards);
             }
         }
     }
@@ -185,6 +191,16 @@ function KlondikeController($scope) {
         $scope.$apply();
     }
 
+    $scope.$on('onCardDblClick', function(event, card){
+        var candidates = $scope.game.foundations.filter(function(foundation) {
+            return isFeasibleFoundation(card, foundation);
+        });
+        if (candidates && candidates.length){
+            moveCardToPile(card, candidates[0]);
+        }
+        $scope.$apply();
+    });
+
     $scope.$on('onElementDrag', function(event, element, possibleTargets) {
         dehighlightAllCards();
         var card = element.scope().card;
@@ -192,19 +208,23 @@ function KlondikeController($scope) {
         highlightCandidate(candidateForDropping);
     });
 
+    function moveCardToPile(card, pile) {
+        var pileContainingCard = getPileContainingCard(card);
+        var index = pileContainingCard.indexOf(card);
+        angular.forEach(pileContainingCard.splice(index), function(movingCard) {
+            pile.push(movingCard)
+        });
+        if(pileContainingCard.length){
+            pileContainingCard[pileContainingCard.length-1].faceUp = true;
+        }
+    }
+
     $scope.$on('onElementDrop', function(event, element, possibleTargets, initialTop, initialLeft) {
         dehighlightAllCards();
         var card = element.scope().card;
         var candidateForDropping = findCandidateForDropping(card, possibleTargets);
         if (candidateForDropping) {
-            var tableauContainingCard = getPileContainingCard(card);
-            var index = tableauContainingCard.indexOf(card);
-            angular.forEach(tableauContainingCard.splice(index), function(movingCard) {
-                candidateForDropping.push(movingCard)
-            });
-            if(tableauContainingCard.length){
-                tableauContainingCard[tableauContainingCard.length-1].faceUp = true;
-            }
+            moveCardToPile(card, candidateForDropping);
         } else {
             angular.element(element).css({
                 top: initialTop,

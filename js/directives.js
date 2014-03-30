@@ -17,13 +17,18 @@ angular.module('klondike.directive', []).directive(
  }).directive(
     'card', function() {
     return {
+        restrict: "E",
         templateUrl: 'templates/card.html',
         scope: {
             'card': '=',
             'position': '@',
             'zoomIndex': '@'
         },
-        restrict: "E"
+        link: function(scope, element, attr) {
+            element.on('dblclick', function(event){
+                scope.$emit('onCardDblClick', scope.card);
+            });
+        }
     };
  }).directive('draggable', function($document) {
      return {
