@@ -1,8 +1,7 @@
   
-angular.module('klondike', ['klondike.directive']).
+angular.module('klondike', ['klondike.directive', 'ngTouch']).
 run(function() {
 });
-
 
 angular.module('klondike.directive', []).directive(
     'cardPile', function() {
@@ -28,6 +27,9 @@ angular.module('klondike.directive', []).directive(
             element.on('dblclick', function(event){
                 scope.$emit('onCardDblClick', scope.card);
             });
+            element.on('touchend', function(event){
+                scope.$emit('onCardDblClick', scope.card);
+            });
         }
     };
  }).directive('draggable', function($document) {
@@ -44,26 +46,41 @@ angular.module('klondike.directive', []).directive(
                  cursor: 'pointer'
              });
 
-             element.on('mousedown', mousedown);
+             element.on('mousedown touchstart', mousedown);
+
+             function getCoordinates(event) {
+                 var touches = event.touches && event.touches.length ? event.touches : [event];
+                 var e = (event.changedTouches && event.changedTouches[0]) ||
+                     (event.originalEvent && event.originalEvent.changedTouches &&
+                      event.originalEvent.changedTouches[0]) ||
+                      touches[0].originalEvent || touches[0];
+
+                 return {
+                     x: e.clientX,
+                     y: e.clientY
+                 };
+             }
 
              function mousedown(event){
                  event.preventDefault();
                  initialTop = element.css('top');
                  initialLeft = element.css('left');
                  y = parseInt(element.css('top'));
-                 startX = event.screenX - x;
-                 startY = event.screenY - y;
+                 var coords = getCoordinates(event);
+                 startX = coords.x - x;
+                 startY = coords.y - y;
                  originalZoomIndex = element.css('z-index');
-                 $document.on('mousemove', mousemove);
-                 $document.on('mouseup', mouseup);
+                 $document.on('mousemove touchmove', mousemove);
+                 $document.on('mouseup touchend', mouseup);
              }
 
              function mousemove(event) {
                 if(scope.enableDrag=='false')
                   return;
 
-                 y = event.screenY - startY;
-                 x = event.screenX - startX;
+                 var coords = getCoordinates(event);
+                 x = coords.x - startX;
+                 y = coords.y - startY;
                  element.css({
                      top: y + 'px' ,
                      left:  x + 'px',
@@ -90,8 +107,8 @@ angular.module('klondike.directive', []).directive(
              }
 
              function mouseup() {
-                 $document.unbind('mousemove', mousemove);
-                 $document.unbind('mouseup', mouseup);
+                 $document.unbind('mousemove touchmove', mousemove);
+                 $document.unbind('mouseup touchend', mouseup);
                  var possibleTargets = getIntersectingDroppableElements(element[0]);
                  element.css('z-index', originalZoomIndex);
                  x = 0, y = 0;
