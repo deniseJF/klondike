@@ -199,8 +199,7 @@ function KlondikeController($scope) {
         if (candidateForDropping) {
             var tableauContainingCard = getPileContainingCard(card);
             var index = tableauContainingCard.indexOf(card);
-            var movingCards = tableauContainingCard.splice(index)
-            angular.forEach(movingCards, function(movingCard) {
+            angular.forEach(tableauContainingCard.splice(index), function(movingCard) {
                 candidateForDropping.push(movingCard)
             });
             if(tableauContainingCard.length){
