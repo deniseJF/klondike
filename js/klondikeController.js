@@ -185,6 +185,7 @@ function KlondikeController($scope) {
     }
 
     $scope.$on('onElementDrag', function(event, element, possibleTargets) {
+        dehighlightAllCards();
         var card = element.scope().card;
         var candidateForDropping = findCandidateForDropping(card, possibleTargets);
         highlightCandidate(candidateForDropping);
