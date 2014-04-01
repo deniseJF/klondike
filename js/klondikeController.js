@@ -100,23 +100,27 @@ var Rectangle = function(element){
     }
 }
 
+function CardPile(cards) {
+    this.cards = cards;
+    this.highlight = false;
+}
 
 
 function Klondike() {
-    this.stock = [];
-    this.waste = [];
-    this.foundations = [[], [], [], []];
+    this.stock = new CardPile([]);
+    this.waste = new CardPile([]);
+    this.foundations = [new CardPile([]), new CardPile([]), new CardPile([]), new CardPile([])];
     this.tableaus = [];
     var klondike = this;
 
     this.init = function(){
         var deck = createDeck();
         angular.forEach([1, 2, 3, 4, 5, 6, 7], function(numCards){
-            var tableau = deck.splice(0, numCards);
-            tableau[tableau.length - 1].faceUp = true;
-            klondike.tableaus.push(tableau);
+            var cards = deck.splice(0, numCards);
+            cards[cards.length - 1].faceUp = true;
+            klondike.tableaus.push(new CardPile(cards));
         });
-        klondike.stock = deck;
+        klondike.stock.cards = deck;
     };
 }
 
@@ -127,7 +131,7 @@ function KlondikeController($scope) {
     function getPileContainingCard(card) {
         var piles = [$scope.game.waste].concat($scope.game.foundations).concat($scope.game.tableaus);
         var pileContainingCard = piles.filter(function(pile){
-            return pile.indexOf(card) >= 0;
+            return pile.cards.indexOf(card) >= 0;
         });
         if (pileContainingCard && pileContainingCard.length){
             return pileContainingCard[0];
@@ -135,17 +139,17 @@ function KlondikeController($scope) {
     }
 
     function isFeasibleFoundation(card, pile) {
-        if (pile.length == 0) {
+        if (pile.cards.length == 0) {
             return card.number == "A";
         }
-        return card.isFoundationSequenceTo(pile[pile.length - 1]);
+        return card.isFoundationSequenceTo(pile.cards[pile.cards.length - 1]);
     }
 
     function isFeasibleTableau(card, pile) {
-        if (pile.length == 0) {
+        if (pile.cards.length == 0) {
             return card.number == "K";
         }
-        return card.isTableauSequenceTo(pile[pile.length - 1]);
+        return card.isTableauSequenceTo(pile.cards[pile.cards.length - 1]);
     }
 
     function findCandidateForDropping(card, possibleTargets) {
@@ -153,37 +157,39 @@ function KlondikeController($scope) {
         var cardsForPossibleTargets = possibleTargets.map(function(elem) {
             return angular.element(elem).scope();
         }).filter(isFeasibleTarget).map(function(elem){
-            return elem.cards;
+            return elem.pile;
         });
         if (cardsForPossibleTargets) {
             return cardsForPossibleTargets[0];
         }
 
         function isFeasibleTarget(target) {
-            if (target.cards == pileContainingCard) {
+            if (target.pile == pileContainingCard) {
                 return false;
             }
             if(target.type == 'tableau'){
-                return isFeasibleTableau(card, target.cards);
+                return isFeasibleTableau(card, target.pile);
             }
             if(target.type == 'foundation'){
-                return isFeasibleFoundation(card, target.cards);
+                return isFeasibleFoundation(card, target.pile);
             }
         }
     }
 
     function dehighlightAllCards() {
         var pile = $scope.game.tableaus.concat($scope.game.foundations);
-        angular.forEach(pile, function(cards){
-            angular.forEach(cards, function(it) {
+        angular.forEach(pile, function(pile){
+            angular.forEach(pile.cards, function(it) {
                 it.highlight = false;
             });
         });
     }
 
     function highlightCandidate(candidateForDropping) {
-        if (candidateForDropping && candidateForDropping.length) {
-            candidateForDropping[candidateForDropping.length - 1].highlight = true;
+        if (candidateForDropping) {
+            if (candidateForDropping.cards.length) {
+                candidateForDropping.cards[candidateForDropping.cards.length - 1].highlight = true;
+            }
         }
         $scope.$apply();
     }
@@ -207,12 +213,12 @@ function KlondikeController($scope) {
 
     function moveCardToPile(card, pile) {
         var pileContainingCard = getPileContainingCard(card);
-        var index = pileContainingCard.indexOf(card);
-        angular.forEach(pileContainingCard.splice(index), function(movingCard) {
-            pile.push(movingCard)
+        var index = pileContainingCard.cards.indexOf(card);
+        angular.forEach(pileContainingCard.cards.splice(index), function(movingCard) {
+            pile.cards.push(movingCard)
         });
-        if(pileContainingCard.length){
-            pileContainingCard[pileContainingCard.length-1].faceUp = true;
+        if(pileContainingCard.cards.length){
+            pileContainingCard.cards[pileContainingCard.cards.length-1].faceUp = true;
         }
     }
 
@@ -232,15 +238,15 @@ function KlondikeController($scope) {
     });
 
     $scope.dealFromStock = function(){
-        if(!$scope.game.stock.length){
-            $scope.game.stock = $scope.game.waste.splice(0).reverse().map(function(elem){
+        if(!$scope.game.stock.cards.length){
+            $scope.game.stock.cards = $scope.game.waste.cards.splice(0).reverse().map(function(elem){
                 elem.faceUp = false;
                 return elem;
             });        
         }else{
-            var card = $scope.game.stock.pop();
+            var card = $scope.game.stock.cards.pop();
             card.faceUp = true;
-            $scope.game.waste.push(card);
+            $scope.game.waste.cards.push(card);
         }
     };
 }

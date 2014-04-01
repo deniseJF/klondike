@@ -12,22 +12,22 @@
     <div ng-app="klondike">
         <div ng-controller="KlondikeController">      
             <div class="klondike-board container-fluid">
-                <card-pile cards="game.stock" type="stock" ng-click="dealFromStock()"></card-pile>
-                <card-pile type="waste" cards="game.waste"></card-pile>
+                <card-pile pile="game.stock" type="stock" ng-click="dealFromStock()"></card-pile>
+                <card-pile type="waste" pile="game.waste"></card-pile>
                 <div class="col-xs-2"></div>
 
-                <card-pile type="foundation" cards="game.foundations[0]"></card-pile>
-                <card-pile type="foundation" cards="game.foundations[1]"></card-pile>
-                <card-pile type="foundation" cards="game.foundations[2]"></card-pile>
-                <card-pile type="foundation" cards="game.foundations[3]"></card-pile>
+                <card-pile type="foundation" pile="game.foundations[0]"></card-pile>
+                <card-pile type="foundation" pile="game.foundations[1]"></card-pile>
+                <card-pile type="foundation" pile="game.foundations[2]"></card-pile>
+                <card-pile type="foundation" pile="game.foundations[3]"></card-pile>
 
-                <card-pile type="tableau" cards="game.tableaus[0]"></card-pile>
-                <card-pile type="tableau" cards="game.tableaus[1]"></card-pile>
-                <card-pile type="tableau" cards="game.tableaus[2]"></card-pile>
-                <card-pile type="tableau" cards="game.tableaus[3]"></card-pile>
-                <card-pile type="tableau" cards="game.tableaus[4]"></card-pile>
-                <card-pile type="tableau" cards="game.tableaus[5]"></card-pile>
-                <card-pile type="tableau" cards="game.tableaus[6]"></card-pile>
+                <card-pile type="tableau" pile="game.tableaus[0]"></card-pile>
+                <card-pile type="tableau" pile="game.tableaus[1]"></card-pile>
+                <card-pile type="tableau" pile="game.tableaus[2]"></card-pile>
+                <card-pile type="tableau" pile="game.tableaus[3]"></card-pile>
+                <card-pile type="tableau" pile="game.tableaus[4]"></card-pile>
+                <card-pile type="tableau" pile="game.tableaus[5]"></card-pile>
+                <card-pile type="tableau" pile="game.tableaus[6]"></card-pile>
             </div>
         </div>
     </div>
