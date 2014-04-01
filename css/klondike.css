@@ -1,5 +1,6 @@
 body {
     background-color: #225522;
+    overflow: hidden;
 }
 
 .card-pile {
