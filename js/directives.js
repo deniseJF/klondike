@@ -39,8 +39,7 @@ angular.module('klondike.directive', []).directive(
              'enableDrag': '@'
          },
          link: function(scope, element, attr) {
-             var startX = 0, startY = 0, x = 0, y = 0, initialTop = 0, initialLeft = 0;
-             var originalZoomIndex = 0;
+             var draggingElements = [];
              element.css({
                  position: 'relative',
                  cursor: 'pointer'
@@ -61,15 +60,42 @@ angular.module('klondike.directive', []).directive(
                  };
              }
 
+             function storeElementCoordinates(coords, element) {
+                 var top = element.css('top');
+                 var left = element.css('left') ? element.css('left') : 0;
+                 draggingElements.push({
+                     element: element,
+                     initialTop: top,
+                     initialLeft: left,
+                     startX: coords.x - parseInt(left),
+                     startY: coords.y - parseInt(top),
+                     origZIndex: element.css('z-index')
+                 });
+             }
+
+             function getNextElement(element) {
+                 // parent() gets the card, next() gets next card,
+                 // and children() gets the next draggable div inside card
+                 return element.parent().next().children();
+             }
+
+             function getElementsToDragFrom(elem) {
+                 var elements = [];
+                 while (elem.length) {
+                     elements.push(elem);
+                     elem = getNextElement(elem);
+                 }
+                 return elements;
+             }
+
              function mousedown(event){
                  event.preventDefault();
-                 initialTop = element.css('top');
-                 initialLeft = element.css('left');
-                 y = parseInt(element.css('top'));
+
                  var coords = getCoordinates(event);
-                 startX = coords.x - x;
-                 startY = coords.y - y;
-                 originalZoomIndex = element.css('z-index');
+                 var elements = getElementsToDragFrom(element);
+                 for (var i = 0; i < elements.length; i++){
+                     storeElementCoordinates(coords, elements[i]);
+                 }
                  $document.on('mousemove touchmove', mousemove);
                  $document.on('mouseup touchend', mouseup);
              }
@@ -79,21 +105,32 @@ angular.module('klondike.directive', []).directive(
                   return;
 
                  var coords = getCoordinates(event);
-                 x = coords.x - startX;
-                 y = coords.y - startY;
-                 element.css({
-                     top: y + 'px' ,
-                     left:  x + 'px',
-                     'z-index': 1000
-                 });
+                 element.css('cursor', 'move');
+                 for (var i = 0; i < draggingElements.length; i++) {
+                     var elem = draggingElements[i];
+                     var newX = coords.x - elem.startX;
+                     var newY = coords.y - elem.startY;
+                     elem.element.css({
+                         'z-index': 1000,
+                         top: newY + 'px' ,
+                         left: newX + 'px',
+                     });
+                 }
 
                  var possibleTargets = getIntersectingDroppableElements(element[0]);
                  scope.$emit('onElementDrag', element, possibleTargets);
              }
 
-             function getIntersectingDroppableElements(element){
-                 // TODO: tratar interseccao com elementos (cards) dentro do elemento droppable
-                 var draggableRectangle = new Rectangle(element);
+             function mouseup() {
+                 $document.unbind('mousemove touchmove', mousemove);
+                 $document.unbind('mouseup touchend', mouseup);
+                 element.css('cursor', 'pointer');
+                 var possibleTargets = getIntersectingDroppableElements(element[0]);
+                 scope.$emit('onElementDrop', element, possibleTargets, draggingElements);
+             }
+
+             function getIntersectingDroppableElements(domElement){
+                 var draggableRectangle = new Rectangle(domElement);
                  var droppableElements = document.getElementsByClassName("droppable");
                  var possibleTargets = [];
                  for(var i = 0; i < droppableElements.length; i++) {
@@ -106,14 +143,6 @@ angular.module('klondike.directive', []).directive(
                  return possibleTargets;
              }
 
-             function mouseup() {
-                 $document.unbind('mousemove touchmove', mousemove);
-                 $document.unbind('mouseup touchend', mouseup);
-                 var possibleTargets = getIntersectingDroppableElements(element[0]);
-                 element.css('z-index', originalZoomIndex);
-                 x = 0, y = 0;
-                 scope.$emit('onElementDrop', element, possibleTargets, initialTop, initialLeft);
-             }
          }
      };
   });

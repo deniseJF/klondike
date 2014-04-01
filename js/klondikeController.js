@@ -225,17 +225,21 @@ function KlondikeController($scope) {
         }
     }
 
-    $scope.$on('onElementDrop', function(event, element, possibleTargets, initialTop, initialLeft) {
+    $scope.$on('onElementDrop', function(event, element, possibleTargets, draggingElements) {
         dehighlightAllCards();
         var card = element.scope().card;
         var candidateForDropping = findCandidateForDropping(card, possibleTargets);
         if (candidateForDropping) {
             moveCardToPile(card, candidateForDropping);
         } else {
-            angular.element(element).css({
-                top: initialTop,
-                left: initialLeft
-            });
+            var elem;
+             while (elem = draggingElements.pop()) {
+                 elem.element.css({
+                     top: elem.initialTop,
+                     left: elem.initialLeft,
+                     'z-index': elem.origZIndex
+                 });
+             }
         }
         $scope.$apply();
     });
