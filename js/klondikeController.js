@@ -179,6 +179,7 @@ function KlondikeController($scope) {
     function dehighlightAllCards() {
         var pile = $scope.game.tableaus.concat($scope.game.foundations);
         angular.forEach(pile, function(pile){
+            pile.highlight = false;
             angular.forEach(pile.cards, function(it) {
                 it.highlight = false;
             });
@@ -189,6 +190,8 @@ function KlondikeController($scope) {
         if (candidateForDropping) {
             if (candidateForDropping.cards.length) {
                 candidateForDropping.cards[candidateForDropping.cards.length - 1].highlight = true;
+            } else {
+                candidateForDropping.highlight = true;
             }
         }
         $scope.$apply();

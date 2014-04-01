@@ -26,8 +26,20 @@ body {
     border-radius: 15px;
 }
 
+.card-pile.highlight > div {
+    background-color: #ffff99;
+}
+
 .card.highlight {
     background-color: #ffff99;
+}
+
+.card.faceUp {
+    cursor: pointer;
+}
+
+.stock {
+    cursor: pointer;
 }
 
 .card.faceDown  {

@@ -1,5 +1,5 @@
 
-<div class="col-xs-2 card-pile">
+<div class="col-xs-2 card-pile {{pile.highlight ? 'highlight' : ''}}">
     <div>
         <div class="{{type}} {{type=='tableau'||type=='foundation'?'droppable':''}}"
             style="height: {{type=='tableau' ? (180 + (pile.cards.length - 1) * 44) + 'px' : '100%'}}">
