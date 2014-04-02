@@ -122,6 +122,33 @@ function Klondike() {
             pileContainingCard.cards[pileContainingCard.cards.length-1].faceUp = true;
         }
     }
+    this.allowMoveToPile = function(card, pile, type) {
+        var pileContainingCard = this.getPileContainingCard(card);
+        if (pile == pileContainingCard) {
+            return false;
+        }
+        if(type == 'tableau'){
+            return this.allowMoveToTableau(card, pile);
+        }
+        if(type == 'foundation'){
+            return this.allowMoveToFoundation(card, pile);
+        }
+        return false;
+    }
+    this.allowMoveToFoundation = function(card, pile) {
+        if (pile.cards.length == 0) {
+            return card.number == "A";
+        }
+        return card.isFoundationSequenceTo(pile.cards[pile.cards.length - 1]);
+    }
+
+    this.allowMoveToTableau = function(card, pile) {
+        if (pile.cards.length == 0) {
+            return card.number == "K";
+        }
+        return card.isTableauSequenceTo(pile.cards[pile.cards.length - 1]);
+    }
+
     this.isSolved = function() {
         function and(x, y) { return x && y; }
         this.tableaus.map(function(tableau) {

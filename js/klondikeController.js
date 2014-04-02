@@ -36,40 +36,13 @@ function KlondikeController($scope) {
 
     function findCandidateForDropping(card, possibleTargets) {
         var pileContainingCard = $scope.game.getPileContainingCard(card);
-        var cardsForPossibleTargets = possibleTargets.map(function(elem) {
+        return possibleTargets.map(function(elem) {
             return angular.element(elem).scope();
-        }).filter(isFeasibleTarget).map(function(elem){
+        }).filter(function(target) {
+            return $scope.game.allowMoveToPile(card, target.pile, target.type);
+        }).map(function(elem){
             return elem.pile;
-        });
-        if (cardsForPossibleTargets) {
-            return cardsForPossibleTargets[0];
-        }
-
-        function isFeasibleTarget(target) {
-            if (target.pile == pileContainingCard) {
-                return false;
-            }
-            if(target.type == 'tableau'){
-                return isFeasibleTableau(card, target.pile);
-            }
-            if(target.type == 'foundation'){
-                return isFeasibleFoundation(card, target.pile);
-            }
-        }
-    }
-
-    function isFeasibleFoundation(card, pile) {
-        if (pile.cards.length == 0) {
-            return card.number == "A";
-        }
-        return card.isFoundationSequenceTo(pile.cards[pile.cards.length - 1]);
-    }
-
-    function isFeasibleTableau(card, pile) {
-        if (pile.cards.length == 0) {
-            return card.number == "K";
-        }
-        return card.isTableauSequenceTo(pile.cards[pile.cards.length - 1]);
+        }).pop();
     }
 
     function restoreDraggedElementsToInitialPositions(draggingElements) {
@@ -93,7 +66,7 @@ function KlondikeController($scope) {
 
     function moveToFoundationIfPossible(card) {
         var candidates = $scope.game.foundations.filter(function(foundation) {
-            return isFeasibleFoundation(card, foundation);
+            return $scope.game.allowMoveToFoundation(card, foundation);
         });
         if (candidates && candidates.length){
             $scope.game.moveCardToPile(card, candidates[0]);
