@@ -151,7 +151,7 @@ function Klondike() {
 
     this.isSolved = function() {
         function and(x, y) { return x && y; }
-        this.tableaus.map(function(tableau) {
+        return this.tableaus.map(function(tableau) {
             return tableau.cards.map(function(it){ return it.faceUp; }).reduce(and, true);
         }).reduce(and, true);
     }
