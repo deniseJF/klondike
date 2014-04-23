@@ -3,8 +3,8 @@ function KlondikeController($scope) {
     $scope.game = new Klondike();
     $scope.game.init();
 
-    $scope.$on('onCardDblClick', function(event, card){
-        moveToFoundationIfPossible(card);
+    $scope.$on('onCardDblClick', function(event, card, element){
+        moveToFoundationIfPossible(card, element);
         $scope.$apply();
     });
 
@@ -64,12 +64,55 @@ function KlondikeController($scope) {
         }
     }
 
-    function moveToFoundationIfPossible(card) {
+    function moveToFoundationIfPossible(card, element) {
         var candidates = $scope.game.foundations.filter(function(foundation) {
             return $scope.game.allowMoveToFoundation(card, foundation);
         });
         if (candidates && candidates.length){
-            $scope.game.moveCardToPile(card, candidates[0]);
+            animateMoveToFoundation(element.children(), candidates[0], function(){
+                $scope.game.moveCardToPile(card, candidates[0]);
+            });
+        }
+    }
+
+    function animateMoveToFoundation(cardElem, foundationPile, callback) {
+        var foundationElem = findFoundationElement();
+        console.log('cardElem', cardElem);
+        console.log('foundationElem', foundationElem);
+        var cardBox = cardElem[0].getBoundingClientRect();
+        var foundationBox = foundationElem[0].getBoundingClientRect();
+        var dx = (foundationBox.left - cardBox.left) / 10;
+        var dy = (foundationBox.top - cardBox.top) / 10;
+        moveCardCloserToFoundation();
+        function moveCardCloserToFoundation(){
+            var cardBox = cardElem[0].getBoundingClientRect();
+            if (cardArrivedAtFoundationBox(cardBox, foundationBox)){
+                callback();
+            } else {
+                cardElem.css('top', parseInt(cardElem.css('top')) + dy + 'px');
+                cardElem.css('left', parseInt(cardElem.css('left')) + dx + 'px');
+                setTimeout(moveCardCloserToFoundation, 20);
+            }
+        }
+        function cardArrivedAtFoundationBox(cardBox, foundationBox) {
+            if (dx > 0) {
+                return ((cardBox.top - foundationBox.top) <= 1
+                        && (cardBox.left - foundationBox.left) >= 1);
+            } else {
+                return ((cardBox.top - foundationBox.top) <= 1
+                        && (cardBox.left - foundationBox.left) <= 1);
+            }
+        }
+
+        function findFoundationElement() {
+            var foundationElems = document.getElementsByClassName("foundation");
+            for (var i = 0; i < foundationElems.length; i++) {
+                var $elem = angular.element(foundationElems[i]);
+                if ($elem.scope().pile === foundationPile) {
+                    return $elem;
+                }
+            }
+            console.log('ERROR: could not find DOM elem for foundationPile:', foundationPile);
         }
     }
 }

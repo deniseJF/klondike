@@ -25,10 +25,10 @@ angular.module('klondike.directive', []).directive(
         },
         link: function(scope, element, attr) {
             element.on('dblclick', function(event){
-                scope.$emit('onCardDblClick', scope.card);
+                scope.$emit('onCardDblClick', scope.card, element);
             });
             element.on('touchend', function(event){
-                scope.$emit('onCardDblClick', scope.card);
+                scope.$emit('onCardDblClick', scope.card, element);
             });
         }
     };
