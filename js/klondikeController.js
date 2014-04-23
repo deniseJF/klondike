@@ -32,6 +32,7 @@ function KlondikeController($scope) {
 
     $scope.dealFromStock = function(){
         $scope.game.dealFromStock();
+        $scope.$apply();
     };
 
     function findCandidateForDropping(card, possibleTargets) {

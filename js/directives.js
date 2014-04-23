@@ -6,12 +6,18 @@ run(function() {
 angular.module('klondike.directive', []).directive(
     'cardPile', function() {
     return {
-          templateUrl: 'templates/cardPile.html',
+        restrict: "E",
+        templateUrl: 'templates/cardPile.html',
         scope: {
             'type': '@',
-            'pile': '='
+            'pile': '=',
+            'click': '&',
         },
-          restrict: "E"
+        link: function(scope, element, attr) {
+            element.on('click touchstart', function(event){
+                scope.click();
+            });
+        }
     };
  }).directive(
     'card', function() {
